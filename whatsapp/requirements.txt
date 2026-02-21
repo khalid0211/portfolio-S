@@ -1,0 +1,18 @@
+# FastAPI and ASGI server
+fastapi>=0.100.0
+uvicorn[standard]>=0.23.0
+
+# Twilio SDK
+twilio>=8.0.0
+
+# Environment variables
+python-dotenv>=1.0.0
+
+# Database (same version as main app)
+duckdb==1.4.3
+
+# Data processing
+pandas>=2.0.0
+
+# HTTP requests for LLM APIs
+requests>=2.28.0

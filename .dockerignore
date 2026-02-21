@@ -1,0 +1,42 @@
+# --- Streamlit ---
+.streamlit/secrets.toml    # Keep secrets out
+# Note: DO NOT ignore .streamlit/config.toml if you have one!
+
+# --- Version Control ---
+.git
+.gitignore
+
+# --- Local Data & Cache ---
+__pycache__/
+*.pyc
+.venv/
+.env
+.env.*
+node_modules/              # In case you use any custom components
+
+# --- App Specific Folders ---
+data/
+DuckDB/
+docs/
+tests/                     # No need to ship tests to production
+
+# --- File Types ---
+*.md
+*.pdf
+*.csv
+*.log                      # Prevent local logs from being baked in
+!data/essential_config.csv # Keep specifically required data files
+
+# --- Service Account & Secrets ---
+*.key
+*.pem
+*.json
+!package.json
+!config/database_config.json
+firebase-credentials.json
+service-account.json
+google-credentials.json
+
+# --- OS Junk ---
+.DS_Store
+Thumbs.db

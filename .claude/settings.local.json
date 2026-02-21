@@ -1,0 +1,41 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(python3:*)",
+      "Bash(python:*)",
+      "Bash(streamlit run:*)",
+      "Bash(copy Portfolio_cloud.py pages1_Portfolio_Analysis.py)",
+      "Bash(copy cpo_dashboard.py pages2_Executive_Dashboard.py)",
+      "Bash(mv:*)",
+      "Bash(dir)",
+      "Bash(pip install:*)",
+      "Bash(del:*)",
+      "Bash(dir:*)",
+      "Bash(mkdir:*)",
+      "Bash(for:*)",
+      "Bash(do echo \"=== $file ===\")",
+      "Bash(head:*)",
+      "Bash(done)",
+      "Bash(tail:*)",
+      "Read(//e/downloads/**)",
+      "Bash(tasklist:*)",
+      "Bash(md5sum:*)",
+      "Bash(taskkill /F /IM streamlit.exe)",
+      "Bash(taskkill //F //IM streamlit.exe)",
+      "Bash(copy utilsfirebase_db.py utilsfirebase_db.py.backup)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(git push)",
+      "Bash(cat:*)",
+      "Bash(ls:*)",
+      "Bash(findstr:*)",
+      "Bash(grep:*)",
+      "Bash(taskkill:*)",
+      "Bash(streamlit cache:*)",
+      "Bash(sort:*)",
+      "Bash(find:*)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}

@@ -1,0 +1,27 @@
+  Quick Redeploy Steps
+
+  From your project directory (F:\Coding\Portfolio-C):
+
+  # 1. Build the Docker image
+  docker build -t gcr.io/portfoliosuite/portfoliosuite-app .
+
+  # 2. Push to Google Container Registry
+  docker push gcr.io/portfoliosuite/portfoliosuite-app
+
+  # 3. Deploy to Cloud Run
+  gcloud run deploy portfoliosuite-app --image gcr.io/portfoliosuite/portfoliosuite-app --region us-central1 --platform managed --allow-unauthenticated
+
+  Prerequisites
+
+  - Docker Desktop must be running
+  - Authenticated with gcloud auth login
+  - Project set: gcloud config set project portfoliosuite
+  - First time only: gcloud auth configure-docker
+
+  After Deployment
+
+  - Service URL: https://portfoliosuite-app-avyl2luyta-uc.a.run.app
+  - View logs: gcloud run logs read portfoliosuite-app --region us-central1
+  - Stream logs: gcloud run logs tail portfoliosuite-app --region us-central1
+
+  The full documentation with troubleshooting is in deploy.md.

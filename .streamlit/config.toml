@@ -1,0 +1,11 @@
+[logger]
+# Set logging level to WARNING to suppress info messages
+level = "warning"
+
+[runner]
+# Suppress warnings during hot reload
+fastReruns = true
+
+[client]
+# Suppress connection warnings
+showErrorDetails = false

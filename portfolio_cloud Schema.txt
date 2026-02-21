@@ -1,0 +1,187 @@
+portfolio_cloud
+
+CREATE TABLE app_user(
+  user_id BIGINT,
+  display_name VARCHAR,
+  email VARCHAR,
+  "role" VARCHAR,
+  department VARCHAR,
+  is_active BOOLEAN,
+  created_at TIMESTAMP,
+  last_login TIMESTAMP
+);
+
+CREATE TABLE portfolio(
+  portfolio_id BIGINT,
+  portfolio_name VARCHAR,
+  managing_organization VARCHAR,
+  portfolio_manager VARCHAR,
+  is_active BOOLEAN,
+  created_at TIMESTAMP,
+  description VARCHAR,
+  default_curve_type VARCHAR,
+  default_alpha DECIMAL(5,2),
+  default_beta DECIMAL(5,2),
+  default_inflation_rate DECIMAL(5,3),
+  factor_1_name VARCHAR,
+  factor_1_weight DECIMAL(5,2),
+  factor_2_name VARCHAR,
+  factor_2_weight DECIMAL(5,2),
+  factor_3_name VARCHAR,
+  factor_3_weight DECIMAL(5,2),
+  factor_4_name VARCHAR,
+  factor_4_weight DECIMAL(5,2),
+  factor_5_name VARCHAR,
+  factor_5_weight DECIMAL(5,2),
+  factor_6_name VARCHAR,
+  factor_6_weight DECIMAL(5,2),
+  factor_7_name VARCHAR,
+  factor_7_weight DECIMAL(5,2),
+  factor_8_name VARCHAR,
+  factor_8_weight DECIMAL(5,2),
+  factor_9_name VARCHAR,
+  factor_9_weight DECIMAL(5,2),
+  factor_10_name VARCHAR,
+  factor_10_weight DECIMAL(5,2),
+  settings_json VARCHAR
+);
+
+CREATE TABLE portfolio_factor(
+  factor_id BIGINT,
+  portfolio_id BIGINT,
+  factor_name VARCHAR,
+  factor_weight_percent DECIMAL(5,2),
+  likert_min INTEGER,
+  likert_max INTEGER,
+  is_active BOOLEAN,
+  created_at TIMESTAMP
+);
+
+CREATE TABLE portfolio_ownership(
+  portfolio_id BIGINT,
+  owner_user_id BIGINT,
+  assigned_at TIMESTAMP,
+  assigned_by VARCHAR,
+  is_active BOOLEAN
+);
+
+CREATE TABLE project(
+  project_id BIGINT,
+  portfolio_id BIGINT,
+  project_code VARCHAR,
+  project_name VARCHAR,
+  responsible_organization VARCHAR,
+  project_manager VARCHAR,
+  project_status VARCHAR,
+  initial_budget DECIMAL(18,2),
+  current_budget DECIMAL(18,2),
+  is_active BOOLEAN,
+  created_at TIMESTAMP,
+  budget_at_completion DECIMAL(18,2),
+  planned_start_date DATE,
+  planned_finish_date DATE,
+  baseline_version INTEGER,
+  baseline_approved_by VARCHAR,
+  baseline_approved_date DATE,
+  baseline_reason VARCHAR,
+  curve_type VARCHAR,
+  alpha DECIMAL(5,2),
+  beta DECIMAL(5,2),
+  inflation_rate DECIMAL(5,3),
+  updated_at TIMESTAMP
+);
+
+CREATE TABLE project_baseline(
+  baseline_id BIGINT,
+  project_id BIGINT,
+  portfolio_id BIGINT,
+  baseline_version INTEGER,
+  baseline_start_date DATE,
+  baseline_end_date DATE,
+  planned_start_date DATE,
+  planned_finish_date DATE,
+  budget_at_completion DECIMAL(18,2),
+  project_status VARCHAR,
+  baseline_reason VARCHAR,
+  approved_by VARCHAR,
+  approved_date DATE,
+  created_at TIMESTAMP,
+  is_active BOOLEAN
+);
+
+CREATE TABLE project_factor_score(
+  portfolio_id BIGINT NOT NULL,
+  project_id BIGINT,
+  factor_id BIGINT,
+  score INTEGER NOT NULL,
+  scored_at TIMESTAMP DEFAULT(now()) NOT NULL,
+  scored_by_user_id BIGINT,
+  is_active BOOLEAN DEFAULT(CAST('t' AS BOOLEAN)),
+  PRIMARY KEY(project_id, factor_id)
+);
+
+CREATE TABLE project_sdg(
+  portfolio_id BIGINT,
+  project_id BIGINT,
+  sdg_id INTEGER,
+  weight_percent DECIMAL(5,2),
+  created_at TIMESTAMP,
+  is_active BOOLEAN
+);
+
+CREATE TABLE project_status_report(
+  status_report_id BIGINT,
+  portfolio_id BIGINT,
+  project_id BIGINT,
+  status_date DATE,
+  actual_cost DECIMAL(18,2),
+  planned_value DECIMAL(18,2),
+  earned_value DECIMAL(18,2),
+  notes VARCHAR,
+  created_at TIMESTAMP,
+  calculation_performed BOOLEAN,
+  calculation_timestamp TIMESTAMP,
+  curve_type VARCHAR,
+  alpha DECIMAL(5,2),
+  beta DECIMAL(5,2),
+  inflation_rate DECIMAL(5,3),
+  actual_duration_months DECIMAL(10,2),
+  original_duration_months DECIMAL(10,2),
+  calculated_pv DECIMAL(18,2),
+  calculated_ev DECIMAL(18,2),
+  present_value DECIMAL(18,2),
+  percent_complete DECIMAL(5,2),
+  percent_budget_used DECIMAL(5,2),
+  percent_time_used DECIMAL(5,2),
+  percent_present_value_project DECIMAL(5,2),
+  percent_likely_value_project DECIMAL(5,2),
+  cv DECIMAL(18,2),
+  cpi DECIMAL(10,3),
+  eac DECIMAL(18,2),
+  etc DECIMAL(18,2),
+  vac DECIMAL(18,2),
+  tcpi DECIMAL(10,3),
+  sv DECIMAL(18,2),
+  spi DECIMAL(10,3),
+  es DECIMAL(10,2),
+  espi DECIMAL(10,3),
+  likely_duration DECIMAL(10,2),
+  likely_completion DATE,
+  planned_value_project DECIMAL(18,2),
+  likely_value_project DECIMAL(18,2),
+  ac DECIMAL(18,2),
+  pv DECIMAL(18,2),
+  ev DECIMAL(18,2),
+  bac DECIMAL(18,2),
+  plan_start_date DATE,
+  plan_finish_date DATE,
+  baseline_version INTEGER,
+  likely_completion_date DATE,
+  svt DECIMAL(10,2),
+  is_active BOOLEAN
+);
+
+CREATE TABLE sdg(
+  sdg_id INTEGER,
+  sdg_name VARCHAR
+);

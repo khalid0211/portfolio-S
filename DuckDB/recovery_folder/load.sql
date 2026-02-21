@@ -1,0 +1,10 @@
+COPY app_user FROM 'recovery_folder/app_user.csv' (FORMAT 'csv', header 1, delimiter ',', quote '"', force_not_null ('display_name', 'email', 'is_active', 'created_at', 'user_id'));
+COPY portfolio FROM 'recovery_folder/portfolio.csv' (FORMAT 'csv', header 1, delimiter ',', quote '"', force_not_null ('portfolio_name', 'is_active', 'created_at', 'portfolio_id'));
+COPY sdg FROM 'recovery_folder/sdg.csv' (FORMAT 'csv', header 1, delimiter ',', quote '"', force_not_null ('sdg_name', 'sdg_id'));
+COPY portfolio_factor FROM 'recovery_folder/portfolio_factor.csv' (FORMAT 'csv', header 1, delimiter ',', quote '"', force_not_null ('portfolio_id', 'factor_name', 'factor_weight_percent', 'likert_min', 'likert_max', 'is_active', 'created_at', 'factor_id'));
+COPY portfolio_ownership FROM 'recovery_folder/portfolio_ownership.csv' (FORMAT 'csv', header 1, delimiter ',', quote '"', force_not_null ('owner_user_id', 'assigned_at', 'portfolio_id'));
+COPY project FROM 'recovery_folder/project.csv' (FORMAT 'csv', header 1, delimiter ',', quote '"', force_not_null ('portfolio_id', 'project_name', 'project_status', 'is_active', 'created_at', 'project_id'));
+COPY project_baseline FROM 'recovery_folder/project_baseline.csv' (FORMAT 'csv', header 1, delimiter ',', quote '"', force_not_null ('project_id', 'portfolio_id', 'baseline_version', 'baseline_start_date', 'created_at', 'baseline_id'));
+COPY project_factor_score FROM 'recovery_folder/project_factor_score.csv' (FORMAT 'csv', header 1, delimiter ',', quote '"', force_not_null ('portfolio_id', 'project_id', 'factor_id', 'score', 'scored_at'));
+COPY project_sdg FROM 'recovery_folder/project_sdg.csv' (FORMAT 'csv', header 1, delimiter ',', quote '"', force_not_null ('portfolio_id', 'project_id', 'sdg_id', 'created_at'));
+COPY project_status_report FROM 'recovery_folder/project_status_report.csv' (FORMAT 'csv', header 1, delimiter ',', quote '"', force_not_null ('portfolio_id', 'project_id', 'status_date', 'actual_cost', 'created_at', 'status_report_id'));

@@ -1,0 +1,11 @@
+.venv/
+__pycache__/
+.env
+*.pyc
+openaikey.txt
+DuckDB/openai_key.txt
+data
+dbreset.py
+.streamlit/*.json
+.streamlit/secrets.toml
+

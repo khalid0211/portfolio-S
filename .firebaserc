@@ -1,0 +1,15 @@
+{
+  "projects": {
+    "default": "portfolio-app-dc033"
+  },
+  "targets": {
+    "portfoliosuite": {
+      "hosting": {
+        "portfoliosuite-app": [
+          "portfoliosuite-app"
+        ]
+      }
+    }
+  },
+  "etags": {}
+}

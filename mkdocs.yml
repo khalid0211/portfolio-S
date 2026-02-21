@@ -1,0 +1,20 @@
+site_name: Portfolio Analysis Suite Docs
+nav:
+  - Home: docs/index.md
+  - User Guide: docs/User_Guide.md
+  - First Run: docs/First_Run.md
+  - Data Dictionary: docs/data_dictionary.md
+  - Variable Migration: docs/complete_variable_migration.md
+theme:
+  name: material
+  features:
+    - navigation.sections
+    - navigation.tabs
+    - content.code.copy
+markdown_extensions:
+  - admonition
+  - toc:
+      permalink: true
+  - tables
+extra:
+  generator: false

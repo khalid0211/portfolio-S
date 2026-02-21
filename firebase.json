@@ -1,0 +1,20 @@
+{
+  "hosting": {
+    "target": "portfoliosuite-app",
+    "public": "public",
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
+    ],
+    "rewrites": [
+      {
+        "source": "**",
+        "run": {
+          "serviceId": "portfoliosuite-app",
+          "region": "us-central1"
+        }
+      }
+    ]
+  }
+}

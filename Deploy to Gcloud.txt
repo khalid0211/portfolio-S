@@ -1,0 +1,3 @@
+  docker build -t gcr.io/portfoliosuite/portfoliosuite-app .
+  docker push gcr.io/portfoliosuite/portfoliosuite-app
+  gcloud run deploy portfoliosuite-app --image gcr.io/portfoliosuite/portfoliosuite-app --region us-central1 --platform managed --allow-unauthenticated

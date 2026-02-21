@@ -1,0 +1,24 @@
+# --- Core UI & Data ---
+streamlit>=1.42.0       # Required for the new native st.login/OAuth features
+pandas
+numpy
+plotly
+altair
+matplotlib
+scipy
+
+# --- Database & Storage ---
+duckdb==1.4.3
+google-cloud-firestore  # Native Firestore client for Google Cloud
+
+# --- Authentication & Security ---
+# Note: Streamlit 1.42+ has native OAuth, but for custom flows or older 
+# components, we still need these core Google Auth libraries.
+google-auth
+google-auth-oauthlib
+google-auth-httplib2
+streamlit-google-auth   # Keep this if you are using the specific component
+
+# --- AI & Cloud ---
+openai
+replicate                # Kimi-Audio-7B-Instruct for Voice Q&A

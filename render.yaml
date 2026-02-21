@@ -1,0 +1,16 @@
+services:
+  - type: web
+    name: portfolio-suite
+    env: python
+    region: oregon
+    plan: free
+    branch: main
+    buildCommand: pip install -r requirements.txt
+    startCommand: streamlit run main.py --server.port $PORT --server.address 0.0.0.0 --server.headless true --server.enableCORS false --server.enableXsrfProtection false
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.0
+      - key: RENDER_PLATFORM
+        value: true
+      - key: REDIRECT_URI
+        value: https://portfolio-s5vc.onrender.com

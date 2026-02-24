@@ -54,6 +54,21 @@ conversation_manager: Optional[ConversationManager] = None
 twilio_client: Optional[TwilioClient] = None
 
 
+def get_currency_formatter(portfolio_id: int):
+    """Get currency formatting function for a portfolio."""
+    if not portfolio_id:
+        return lambda v: portfolio_logic.format_currency(v, "$", "")
+
+    try:
+        settings = portfolio_logic.get_portfolio_settings(portfolio_id)
+        symbol = settings.get("currency_symbol", "$")
+        postfix = settings.get("currency_postfix", "")
+    except Exception:
+        symbol, postfix = "$", ""
+
+    return lambda v: portfolio_logic.format_currency(v, symbol, postfix)
+
+
 @app.on_event("startup")
 async def startup_event():
     """Initialize services on startup."""
@@ -412,6 +427,9 @@ def handle_select_portfolio(phone: str, portfolio_name: str) -> str:
 
         portfolio_id = portfolio["portfolio_id"]
 
+        # Get currency formatter for this portfolio
+        fmt = get_currency_formatter(portfolio_id)
+
         # Get portfolio summary
         summary = portfolio_logic.get_portfolio_summary(portfolio_id)
 
@@ -429,7 +447,7 @@ def handle_select_portfolio(phone: str, portfolio_name: str) -> str:
         # Build response with summary
         lines = [f"Selected: *{portfolio['portfolio_name']}*\n"]
         lines.append(f"Total Projects: {summary.get('total_projects', 0)}")
-        lines.append(f"Total Budget: {portfolio_logic.format_currency(summary.get('total_budget', 0))}")
+        lines.append(f"Total Budget: {fmt(summary.get('total_budget', 0))}")
         lines.append(f"Departments: {summary.get('department_count', 0)}")
 
         if status_date:
@@ -466,6 +484,9 @@ def handle_list_projects(phone: str, conv_state: dict) -> str:
         return "Select a Portfolio first. Use /portfolios to see available portfolios."
 
     try:
+        # Get currency formatter for this portfolio
+        fmt = get_currency_formatter(portfolio_id)
+
         # Get projects - filtered by department if one is selected
         if department:
             df = portfolio_logic.get_projects_by_department(portfolio_id, department)
@@ -485,7 +506,7 @@ def handle_list_projects(phone: str, conv_state: dict) -> str:
             name = row.project_name
             budget = getattr(row, 'current_budget', 0) or 0
             total_budget += budget
-            budget_str = portfolio_logic.format_currency(budget)
+            budget_str = fmt(budget)
 
             lines.append(f"{idx}. {name} ({budget_str})")
             items.append({
@@ -495,7 +516,7 @@ def handle_list_projects(phone: str, conv_state: dict) -> str:
             })
 
         # Executive Summary
-        lines.append(f"\n*Summary:* {len(df)} Projects | Total Budget: {portfolio_logic.format_currency(total_budget)}")
+        lines.append(f"\n*Summary:* {len(df)} Projects | Total Budget: {fmt(total_budget)}")
         lines.append("\nSelect a project (1-{}) or:".format(len(df)))
 
         # Add navigation options based on context
@@ -591,12 +612,15 @@ def handle_portfolio_mode(phone: str, conv_state: dict) -> str:
     conversation_manager.clear_project(phone)
     conversation_manager.clear_department(phone)
 
+    # Get currency formatter for this portfolio
+    fmt = get_currency_formatter(portfolio_id)
+
     # Get fresh summary
     summary = portfolio_logic.get_portfolio_summary(portfolio_id)
 
     lines = [f"*{portfolio_name}*\n"]
     lines.append(f"Total Projects: {summary.get('total_projects', 0)}")
-    lines.append(f"Total Budget: {portfolio_logic.format_currency(summary.get('total_budget', 0))}")
+    lines.append(f"Total Budget: {fmt(summary.get('total_budget', 0))}")
     lines.append(f"Departments: {summary.get('department_count', 0)}")
 
     # Numbered next steps
@@ -624,6 +648,9 @@ def handle_list_departments(phone: str, conv_state: dict) -> str:
         return "Select a Portfolio first. Use /portfolios to see available portfolios."
 
     try:
+        # Get currency formatter for this portfolio
+        fmt = get_currency_formatter(portfolio_id)
+
         df = portfolio_logic.get_departments_in_portfolio(portfolio_id)
 
         if df.empty:
@@ -641,7 +668,7 @@ def handle_list_departments(phone: str, conv_state: dict) -> str:
             total_projects += count
             total_budget += budget
 
-            lines.append(f"{idx}. {dept} ({count} projects, {portfolio_logic.format_currency(budget)})")
+            lines.append(f"{idx}. {dept} ({count} projects, {fmt(budget)})")
             items.append({
                 "department": dept,
                 "project_count": count,
@@ -649,7 +676,7 @@ def handle_list_departments(phone: str, conv_state: dict) -> str:
             })
 
         # Executive Summary
-        lines.append(f"\n*Summary:* {len(df)} Departments | {total_projects} Projects | {portfolio_logic.format_currency(total_budget)}")
+        lines.append(f"\n*Summary:* {len(df)} Departments | {total_projects} Projects | {fmt(total_budget)}")
         lines.append("\nSelect a department (1-{}) or:".format(len(df)))
         lines.append(f"{len(df) + 1}. View all Projects")
         lines.append(f"{len(df) + 2}. Back to {conv_state.get('portfolio_name', 'Portfolio')}")
@@ -733,6 +760,9 @@ def handle_select_portfolio_by_item(phone: str, item: dict) -> str:
         portfolio_id = item["portfolio_id"]
         portfolio_name = item["portfolio_name"]
 
+        # Get currency formatter for this portfolio
+        fmt = get_currency_formatter(portfolio_id)
+
         # Get portfolio summary
         summary = portfolio_logic.get_portfolio_summary(portfolio_id)
 
@@ -745,7 +775,7 @@ def handle_select_portfolio_by_item(phone: str, item: dict) -> str:
         # Build response with summary
         lines = [f"Selected: *{portfolio_name}*\n"]
         lines.append(f"Total Projects: {summary.get('total_projects', 0)}")
-        lines.append(f"Total Budget: {portfolio_logic.format_currency(summary.get('total_budget', 0))}")
+        lines.append(f"Total Budget: {fmt(summary.get('total_budget', 0))}")
         lines.append(f"Departments: {summary.get('department_count', 0)}")
 
         if status_date:
@@ -780,6 +810,9 @@ def handle_select_department_by_item(phone: str, item: dict, conv_state: dict) -
         portfolio_id = conv_state.get("portfolio_id")
         portfolio_name = conv_state.get("portfolio_name", "Portfolio")
 
+        # Get currency formatter for this portfolio
+        fmt = get_currency_formatter(portfolio_id)
+
         # Update state
         conversation_manager.set_department(phone, department)
 
@@ -788,7 +821,7 @@ def handle_select_department_by_item(phone: str, item: dict, conv_state: dict) -
 
         lines = [f"Selected Department: *{department}*\n"]
         lines.append(f"Projects: {summary.get('project_count', 0)}")
-        lines.append(f"Total Budget: {portfolio_logic.format_currency(summary.get('total_budget', 0))}")
+        lines.append(f"Total Budget: {fmt(summary.get('total_budget', 0))}")
 
         # Numbered next steps
         lines.append("\n*What would you like to do?*")
@@ -818,6 +851,10 @@ def handle_select_project_by_item(phone: str, item: dict, conv_state: dict) -> s
         project_name = item["project_name"]
         budget = item.get("current_budget", 0)
 
+        # Get currency formatter for this portfolio
+        portfolio_id = conv_state.get("portfolio_id")
+        fmt = get_currency_formatter(portfolio_id)
+
         # Update state
         conversation_manager.set_project(phone, project_id, project_name)
 
@@ -828,7 +865,7 @@ def handle_select_project_by_item(phone: str, item: dict, conv_state: dict) -> s
         # Quick confirmation with numbered next steps
         lines = [f"Selected: *{project_name}*"]
         if budget:
-            lines.append(f"Budget: {portfolio_logic.format_currency(budget)}")
+            lines.append(f"Budget: {fmt(budget)}")
 
         lines.append("\n*What would you like to do?*")
         lines.append("1. View Performance Overview")
@@ -874,6 +911,10 @@ async def handle_project_overview(phone: str, conv_state: dict) -> str:
         return "Select a project first. Use /projects and select one by number."
 
     try:
+        # Get currency formatter for this portfolio
+        portfolio_id = conv_state.get("portfolio_id")
+        fmt = get_currency_formatter(portfolio_id)
+
         # Get EVM history (last 10 periods)
         df = portfolio_logic.get_project_evm_history(project_id, limit=10)
 
@@ -891,9 +932,9 @@ async def handle_project_overview(phone: str, conv_state: dict) -> str:
             else:
                 date_str = str(status_dt).split()[0]  # Take only date part
 
-            pv = portfolio_logic.format_currency(row['pv'])
-            ac = portfolio_logic.format_currency(row['ac'])
-            ev = portfolio_logic.format_currency(row['ev'])
+            pv = fmt(row['pv'])
+            ac = fmt(row['ac'])
+            ev = fmt(row['ev'])
             spi = f"{row['spi']:.2f}" if row['spi'] is not None else "N/A"
             cpi = f"{row['cpi']:.2f}" if row['cpi'] is not None else "N/A"
 

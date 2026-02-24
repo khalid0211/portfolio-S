@@ -8,4 +8,4 @@ data
 dbreset.py
 .streamlit/*.json
 .streamlit/secrets.toml
-
+nul
